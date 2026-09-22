@@ -406,3 +406,7 @@ console.log('PASS: official H3, LTX-2.5 and Z-Image workflows, model preference,
 const zKitchenGraph = buildZImage('attention test', 768, 768, 1, 'z.safetensors', 'qwen.safetensors', 'ae.safetensors', 8, 1, 'turbo', '', 'comfy kitchen attention')
 assert.equal(zKitchenGraph['85'].class_type, 'ModelAttentionBackend')
 assert.equal(JSON.stringify(zKitchenGraph['7'].inputs.model), JSON.stringify(['85', 0]))
+const { buildMusic3Workflow } = load('src/lib/music3Workflow.ts')
+const music3Graph = buildMusic3Workflow({ caption: 'caption', lyrics: '[verse]\nla', seed: 1, duration: 30, tiledDecode: true, filenamePrefix: 'audio/Music3' }, { diffusion: 'dit.safetensors', textEncoder: 'te.safetensors', vae: 'dav.safetensors' })
+assert.equal(music3Graph['9'].inputs.format, 'mp3')
+assert.equal(music3Graph['9'].inputs['format.quality'], 'V0', 'SaveAudioAdvanced requires the MP3 quality sub-input keyed as format.quality')

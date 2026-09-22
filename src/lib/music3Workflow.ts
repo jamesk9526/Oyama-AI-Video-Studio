@@ -19,7 +19,8 @@ export function buildMusic3Workflow(options: Music3GenerationOptions, models: Mu
     '5': { class_type: 'ConditioningZeroOut', inputs: { conditioning: ['4', 0] } },
     '6': { class_type: 'EmptyMiniMaxMusic3LatentAudio', inputs: { seconds: ['4', 1], batch_size: 1 } },
     '7': { class_type: 'KSampler', inputs: { model: ['1', 0], positive: ['4', 0], negative: ['5', 0], latent_image: ['6', 0], seed: options.seed, steps: 30, cfg: 1.7, sampler_name: 'euler', scheduler: 'simple', denoise: 1 } },
-    '9': { class_type: 'SaveAudioAdvanced', inputs: { audio: ['8', 0], filename_prefix: options.filenamePrefix, format: 'mp3', bitrate: 'V0' } },
+    // Current ComfyUI exposes MP3 quality as a DynamicCombo sub-input (`format.quality`); `bitrate` is kept for older builds.
+    '9': { class_type: 'SaveAudioAdvanced', inputs: { audio: ['8', 0], filename_prefix: options.filenamePrefix, format: 'mp3', 'format.quality': 'V0', bitrate: 'V0' } },
   }
   graph['8'] = options.tiledDecode ? { class_type: 'VAEDecodeAudioTiled', inputs: { samples: ['7', 0], vae: ['3', 0], tile_size: 1536, overlap: 64 } } : { class_type: 'VAEDecodeAudio', inputs: { samples: ['7', 0], vae: ['3', 0] } }
   return graph
